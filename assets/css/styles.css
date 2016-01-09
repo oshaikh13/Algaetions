@@ -1,0 +1,26 @@
+.start-screen {
+  background: -webkit-gradient(linear, center top, center bottom, from(#0b8793), to(#360033));
+  background: -webkit-linear-gradient(#0b8793, #360033);
+  background: -moz-linear-gradient(#0b8793, #360033);
+  background: -o-linear-gradient(#0b8793, #360033);
+  background: -ms-linear-gradient(#0b8793, #360033);
+  background: linear-gradient(#0b8793, #360033); }
+
+.center {
+  text-align: center; }
+
+.elem-center {
+  margin-left: 50%; }
+
+.header {
+  color: white; }
+
+.main-header {
+  font-size: 50px; }
+
+.sub-header {
+  font-size: 30px;
+  padding-bottom: 5%;
+  font-weight: lighter; }
+
+/*# sourceMappingURL=styles.css.map */
