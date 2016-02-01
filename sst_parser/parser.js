@@ -1,16 +1,22 @@
 var fs = require('fs');
+var readline = require('readline');
+
+var parsedJSON = [];
+var files = [];
+
+var rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 
 var parser = function(txt, startLat, intervalLat, startLong, intervalLong, longFlip) {
-  // var parsed = {};
   var arrParse = [];
 
   var lats = txt.split('\n');
   for (var i = 0; i < lats.length; i++) {
     var newLong = startLong;
-    // lats[i] = lats[i].replace(/\t/g, ' ');
     lats[i] = lats[i].trim();
     lats[i] = lats[i].split("\t");
-    console.log(lats[i].length)
 
     if (lats[i][0] === "") lats[i].shift();
     if (lats[i][lats[i].length - 1] === "") lats[i].pop();
@@ -22,7 +28,7 @@ var parser = function(txt, startLat, intervalLat, startLong, intervalLong, longF
         startLong *= -1;
         continue;
       }
-      
+
       startLong += intervalLong;
     }
     startLat += intervalLat;
@@ -56,29 +62,66 @@ var saveJSON = function(JSONArray, files) {
   }
 }
 
-var parsedJSON = [];
-var files = [];
+rl.question('Enter limits (latlow lathigh longlow longhigh), seperated by a space\n e.g: 70 80 62 65\n:', function(answer) {
+  
+  var lims;
 
-fs.readdir(__dirname, function(err ,res){
-  for (var i = 0; i < res.length; i++) {
+  if (answer !== "-1") {
+    console.log();
+    lims = answer.split(" ");
 
-    if (res[i].indexOf('.txt') === res[i].length - 4) {
-      files.push(res[i]);
+    if (lims.length !== 4){
+      console.log("invalid limits");
+      process.exit();
     }
 
+    console.log("Parsing with limits:");
+    console.log("MinLat: " + lims[0]);
+    console.log("MaxLat: " + lims[1]);
+    console.log("MinLong: " + lims[2]);
+    console.log("MaxLong: " + lims[3]);
+    console.log();
+
+
+  } else {
+    lims = null;
   }
 
-  files.forEach(function(item){
-    console.log("Parsing: " + item);
-    fs.readFile(item, 'utf8', function (err, res) {
-      parsedJSON.push(parser(res, 89.5, -1, .5, 1, 179.5));
-      if (parsedJSON.length === files.length){
-        saveJSON(parsedJSON, files);
-      }
-    })
-  })
+  fs.readdir(__dirname, function(err ,res){
+    for (var i = 0; i < res.length; i++) {
 
+      if (res[i].indexOf('.txt') === res[i].length - 4) {
+        files.push(res[i]);
+      }
+
+    }
+
+    files.forEach(function(item){
+      console.log("Parsing: " + item);
+      fs.readFile(item, 'utf8', function (err, res) {
+        parsedJSON.push(parser(res, 89.5, -1, .5, 1, 179.5));
+        if (parsedJSON.length === files.length){
+          if (lims) {
+            for (var i = 0; i < parsedJSON.length; i++){
+              parsedJSON[i] = parsedJSON[i].filter(function(coordinate){
+                var test = ((coordinate.latitude >= lims[0] && coordinate.latitude <= lims[1]) 
+                  && (coordinate.longitude >= lims[2] && coordinate.longitude <= lims[3]));
+
+                return test;
+              });
+            }
+
+          }
+          saveJSON(parsedJSON, files);
+        }
+      })
+    })
+
+  });
+
+  rl.close();
 });
+
 
 
 
