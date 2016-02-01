@@ -1,5 +1,37 @@
-$(document).ready(function (argument) {
-  var colors = d3.scale.category10();
+var parser = function(data, points, custom) {
+  data.forEach(function(coordinates) {
+    var data = {};
+    for (var key in coordinates) {
+      if (key === "") { // latitude
+        data.latitude = coordinates[key];
+      } else if (coordinates[key] !== "NaN") { // longitude
+        data.longitude = key;
+        data.radius = coordinates[key];
+      }
+    }
+
+    if (data.latitude && data.radius && data.longitude) {
+      for (var key in custom) {
+        data[key] = custom[key];
+      }
+      points.push(data);
+    }
+
+  });
+}
+
+var csvParse = function(url, parser, custom, cb) {
+  var points = [];
+  d3.csv(url, function(err, data) {
+
+    parser(data, points, custom);
+    cb(points);
+  });
+
+}
+
+$(document).ready(function(argument) {
+
   var mapElem = document.getElementById('map-view');
 
   // debugger;
@@ -7,49 +39,60 @@ $(document).ready(function (argument) {
 
 
   var zoom = new Datamap({
-    element: document.getElementById("map-view"),
+    element: mapElem,
     scope: 'world',
     height: setHeight,
-    // Zoom in on Africa
+    // Zoom in on Bengal Bay
     setProjection: function(element) {
       var projection = d3.geo.equirectangular()
-        .center([92.0000, 15.0000])
+        .center([92.0000, 15.0000]) // long, lat
         .rotate([4.4, 0])
         .scale(1000)
         .translate([element.offsetWidth / 2, element.offsetHeight / 2]);
       var path = d3.geo.path()
         .projection(projection);
 
-      return {path: path, projection: projection};
+      return {
+        path: path,
+        projection: projection
+      };
     },
     fills: {
-      defaultFill: "#ABDDA4",
-      gt50: colors(Math.random() * 20),
-      eq50: colors(Math.random() * 20),
-      lt25: colors(Math.random() * 10),
-      gt75: colors(Math.random() * 200),
-      lt50: colors(Math.random() * 20),
-      eq0: colors(Math.random() * 1),
-      pink: '#0fa0fa',
-      gt500: colors(Math.random() * 1)
+      chlorobubble: "#009933",
+      defaultFill: '#ABDDA4'
     },
     data: {
-      'ZAF': { fillKey: 'gt50' },
-      'ZWE': { fillKey: 'lt25' },
-      'NGA': { fillKey: 'lt50' },
-      'MOZ': { fillKey: 'eq50' },
-      'MDG': { fillKey: 'eq50' },
-      'EGY': { fillKey: 'gt75' },
-      'TZA': { fillKey: 'gt75' },
-      'LBY': { fillKey: 'eq0' },
-      'DZA': { fillKey: 'gt500' },
-      'SSD': { fillKey: 'pink' },
-      'SOM': { fillKey: 'gt50' },
-      'GIB': { fillKey: 'eq50' },
-      'AGO': { fillKey: 'lt50' }
+
+    },
+
+    done: function(datamap) {
+      datamap.svg.call(d3.behavior.zoom().on("zoom", redraw));
+
+      function redraw() {
+        datamap.svg.selectAll("g")
+          .attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")")
+
+      }
     }
   });
-          
 
-  // body...
+  csvParse('/assets/data/phytoplankton/bengalbay/201505.csv',
+    parser, {
+      fillKey: 'chlorobubble',
+      borderWidth: 0,
+      popupOnHover: true
+    },
+    function(data) {
+      zoom.bubbles(data, {
+        popupTemplate: function(geo, bubble) {
+          console.log(bubble);
+          return ['<div class="hoverinfo">' + bubble.radius,
+            '<br/>Longitude: ' + bubble.longitude + '',
+            '<br/>Latitude: ' + bubble.latitude + '',
+            '</div>'
+          ].join('');
+        }
+      });
+    });
+
 })
