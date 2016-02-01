@@ -7,24 +7,22 @@ var parser = function(txt, startLat, intervalLat, startLong, intervalLong, longF
   var lats = txt.split('\n');
   for (var i = 0; i < lats.length; i++) {
     var newLong = startLong;
-    lats[i] = lats[i].replace(/\t/g, ' ');
-    lats[i] = lats[i].replace(/  +/g, ' ').split(" ");
+    // lats[i] = lats[i].replace(/\t/g, ' ');
+    lats[i] = lats[i].trim();
+    lats[i] = lats[i].split("\t");
+    console.log(lats[i].length)
 
     if (lats[i][0] === "") lats[i].shift();
     if (lats[i][lats[i].length - 1] === "") lats[i].pop();
     for (var j = 0; j < lats[i].length; j++) {
+
+      arrParse.push({latitude: startLat, longitude: startLong, temp: lats[i][j]});
+
       if (longFlip === startLong) {
         startLong *= -1;
+        continue;
       }
-
-      // if (!parsed[startLat]) {
-      //   parsed[startLat] = {};
-      // }
-
-      arrParse.push({lat: startLat, long: startLong, temp: lats[i][j]});
-
-      // parsed[startLat][startLong] = lats[i][j];
-
+      
       startLong += intervalLong;
     }
     startLat += intervalLat;
