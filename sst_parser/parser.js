@@ -16,7 +16,8 @@ var parser = function(txt, startLat, intervalLat, startLong, intervalLong, longF
   for (var i = 0; i < lats.length; i++) {
     var newLong = startLong;
     lats[i] = lats[i].trim();
-    lats[i] = lats[i].split("\t");
+    lats[i] = lats[i].replace(/\s{2,}/g,' ');
+    lats[i] = lats[i].split(" ");
 
     if (lats[i][0] === "") lats[i].shift();
     if (lats[i][lats[i].length - 1] === "") lats[i].pop();
