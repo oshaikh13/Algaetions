@@ -23,7 +23,13 @@ var parser = function(txt, startLat, intervalLat, startLong, intervalLong, longF
     if (lats[i][lats[i].length - 1] === "") lats[i].pop();
     for (var j = 0; j < lats[i].length; j++) {
 
-      arrParse.push({latitude: startLat, longitude: startLong, temp: lats[i][j]});
+      arrParse.push({
+        latitude: startLat, 
+        longitude: startLong, 
+        temp: lats[i][j],
+        radius: lats[i][j] / 6.5 // Perform some sort of regression here.
+
+      });
 
       if (longFlip === startLong) {
         startLong *= -1;
@@ -88,7 +94,7 @@ rl.question('Enter limits (latlow lathigh longlow longhigh), seperated by a spac
     lims = null;
   }
 
-  fs.readdir(__dirname, function(err ,res){
+  fs.readdir(__dirname + '/text/', function(err ,res){
     for (var i = 0; i < res.length; i++) {
 
       if (res[i].indexOf('.txt') === res[i].length - 4) {
@@ -99,7 +105,10 @@ rl.question('Enter limits (latlow lathigh longlow longhigh), seperated by a spac
 
     files.forEach(function(item){
       console.log("Parsing: " + item);
-      fs.readFile(item, 'utf8', function (err, res) {
+      fs.readFile(__dirname + '/text/' + item, 'utf8', function (err, res) {
+        if (err) {
+          console.log(err);
+        }
         parsedJSON.push(parser(res, 89.5, -1, .5, 1, 179.5));
         if (parsedJSON.length === files.length){
           if (lims) {

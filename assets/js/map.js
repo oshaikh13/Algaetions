@@ -1,3 +1,5 @@
+var bubbles = [];
+
 var parser = function(data, points, custom) {
   data.forEach(function(coordinates) {
     var data = {};
@@ -76,6 +78,26 @@ $(document).ready(function(argument) {
     }
   });
 
+  var addBubbles = function (data) {
+    bubbles = bubbles.concat(data);
+    debugger;
+    zoom.bubbles(bubbles, {
+      popupTemplate: function(geo, bubble) {
+        return ['<div class="hoverinfo">' + bubble.radius,
+          '<br/>Longitude: ' + bubble.longitude + '',
+          '<br/>Latitude: ' + bubble.latitude + '',
+          '</div>'
+        ].join('');
+      }
+    });
+  }
+
+  var fetchTemp = function (param) {
+    $.getJSON('/sst_parser/data/' + param + '.json', function(data){
+      addBubbles(data);
+    })
+  }
+
   csvParse('/assets/data/phytoplankton/bengalbay/201505.csv',
     parser, {
       fillKey: 'chlorobubble',
@@ -83,16 +105,10 @@ $(document).ready(function(argument) {
       popupOnHover: true
     },
     function(data) {
-      zoom.bubbles(data, {
-        popupTemplate: function(geo, bubble) {
-          console.log(bubble);
-          return ['<div class="hoverinfo">' + bubble.radius,
-            '<br/>Longitude: ' + bubble.longitude + '',
-            '<br/>Latitude: ' + bubble.latitude + '',
-            '</div>'
-          ].join('');
-        }
-      });
+      addBubbles(data);
+      fetchTemp('2015-01-04-sst');
     });
-
 })
+
+
+
