@@ -7,5 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Omar Shaikh <oshaikh13@gmail.com> (http://www.awesomeomar.com)",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "remodal": "^1.0.6",
+    "request": "^2.69.0"
+  }
 }

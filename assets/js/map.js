@@ -1,3 +1,6 @@
+// $('.remodal').remodal({ hashTracking: false });
+
+
 var bubbles = [];
 
 var parser = function(data, points, custom) {
@@ -20,7 +23,7 @@ var parser = function(data, points, custom) {
     }
 
   });
-}
+};
 
 var csvParse = function(url, parser, custom, cb) {
   var points = [];
@@ -30,14 +33,14 @@ var csvParse = function(url, parser, custom, cb) {
     cb(points);
   });
 
-}
+};
 
 $(document).ready(function(argument) {
 
   var mapElem = document.getElementById('map-view');
 
   // debugger;
-  var setHeight = $(document).height() * .9; //if not null, datamaps will grab the height of 'element'
+  var setHeight = $(document).height() * 0.9; //if not null, datamaps will grab the height of 'element'
 
 
   var zoom = new Datamap({
@@ -61,7 +64,8 @@ $(document).ready(function(argument) {
     },
     fills: {
       chlorobubble: "#009933",
-      defaultFill: '#ABDDA4'
+      defaultFill: '#ABDDA4',
+      tempbubble: '#ff0000'
     },
     data: {
 
@@ -80,25 +84,33 @@ $(document).ready(function(argument) {
 
   var addBubbles = function (data) {
     bubbles = bubbles.concat(data);
-    debugger;
     zoom.bubbles(bubbles, {
       popupTemplate: function(geo, bubble) {
-        return ['<div class="hoverinfo">' + bubble.radius,
+        if (!bubble.temp) {
+          bubble.temp = bubble.radius;
+        }
+        return ['<div class="hoverinfo">' + bubble.temp,
           '<br/>Longitude: ' + bubble.longitude + '',
           '<br/>Latitude: ' + bubble.latitude + '',
           '</div>'
         ].join('');
       }
     });
-  }
+  };
 
   var fetchTemp = function (param) {
     $.getJSON('/sst_parser/data/' + param + '.json', function(data){
       addBubbles(data);
-    })
-  }
+    });
+  };
 
-  csvParse('/assets/data/phytoplankton/bengalbay/201505.csv',
+  var fetchDeforestation = function(param) {
+    $.getJSON('/sst_parser/parsed-geojson/' + param + '.json', function(data){
+      addBubbles(data);
+    });
+  };
+
+  csvParse('/assets/data/phytoplankton/bengalbay/201506.csv',
     parser, {
       fillKey: 'chlorobubble',
       borderWidth: 0,
@@ -106,9 +118,18 @@ $(document).ready(function(argument) {
     },
     function(data) {
       addBubbles(data);
-      fetchTemp('2015-01-04-sst');
+      // fetchTemp('2015-01-04-sst');
+      fetchDeforestation('mmr2015-01-01,2015-05-29');
+      fetchDeforestation('ind2015-01-01,2015-05-29');
+      fetchDeforestation('bgd2015-01-01,2015-05-29');
+      fetchDeforestation('tha2015-01-01,2015-05-29');
+
+
+
     });
-})
+});
+
+
 
 
 

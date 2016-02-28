@@ -9,6 +9,15 @@ var rl = readline.createInterface({
   output: process.stdout
 });
 
+var A = -0.006187928;
+var B = 0.2660809045;
+var C = -0.0413479051;
+
+var regression = function(num){
+  // AX^2 + BX + C 
+  return (A * (num * num)) + (B * num) + (C);
+};
+
 var parser = function(txt, startLat, intervalLat, startLong, intervalLong, longFlip) {
   var arrParse = [];
 
@@ -27,8 +36,10 @@ var parser = function(txt, startLat, intervalLat, startLong, intervalLong, longF
         latitude: startLat, 
         longitude: startLong, 
         temp: lats[i][j],
-        radius: lats[i][j] / 6.5 // Perform some sort of regression here.
-
+        radius: regression(lats[i][j]), // Perform some sort of regression here.
+        fillKey: 'tempbubble',
+        borderWidth: 0,
+        popupOnHover: true
       });
 
       if (longFlip === startLong) {
@@ -113,7 +124,7 @@ rl.question('Enter limits (latlow lathigh longlow longhigh), seperated by a spac
         if (parsedJSON.length === files.length){
           if (lims) {
             for (var i = 0; i < parsedJSON.length; i++){
-              parsedJSON[i] = parsedJSON[i].filter(function(coordinate){
+              parsedJSON[i] = parsedJSON[i].filter(function (coordinate){
                 var test = ((coordinate.latitude >= lims[0] && coordinate.latitude <= lims[1]) 
                   && (coordinate.longitude >= lims[2] && coordinate.longitude <= lims[3]));
 
@@ -124,8 +135,8 @@ rl.question('Enter limits (latlow lathigh longlow longhigh), seperated by a spac
           }
           saveJSON(parsedJSON, files);
         }
-      })
-    })
+      });
+    });
 
   });
 
