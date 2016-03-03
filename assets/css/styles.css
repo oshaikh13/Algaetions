@@ -9,11 +9,24 @@
 .center {
   text-align: center; }
 
+.center-button {
+    text-align: center;
+}
+
+.button-holder {
+  padding-top: 2%;
+  padding-bottom: 5%;
+}
+
 .elem-center {
   margin-left: 50%; }
 
 .header {
   color: white; }
+
+.picker {
+  background-color: white;
+}
 
 .main-header {
   font-size: 50px; }
@@ -22,6 +35,18 @@
   font-size: 30px;
   padding-bottom: 5%;
   font-weight: lighter; }
+
+.bullet-header {
+  font-size: 20px;
+  font-weight: lighter;
+  
+}
+
+.cumulative-switch {
+  text-align: left;
+  font-size: 12px;
+  font-weight: normal;
+}
 
 .background-start {
   margin: 0px;
