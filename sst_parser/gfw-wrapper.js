@@ -28,11 +28,8 @@ var getFormaData = function(url, name) {
    var options = { method: 'GET',
     url: url};
 
-  console.log(url);
-
   request(options, function (error, response, body) {
     if (error) throw new Error(error);
-
     parseGeoJSON(JSON.parse(body), name);
   }); 
 };
@@ -51,10 +48,20 @@ var getFormaQuery = function(date, location) {
   });
 };
 
-getFormaQuery("2015-01-01,2015-05-29", "mmr");
-getFormaQuery("2015-01-01,2015-05-29", "ind");
-getFormaQuery("2015-01-01,2015-05-29", "bgd");
-getFormaQuery("2015-01-01,2015-05-29", "tha");
+
+var getQueriesAllCountry = function(countryCode) {
+  getFormaQuery('2015-01-01,2015-01-31', countryCode);
+  getFormaQuery('2015-02-01,2015-02-28', countryCode);
+  getFormaQuery('2015-03-01,2015-03-31', countryCode);
+  getFormaQuery('2015-04-01,2015-04-30', countryCode);
+  getFormaQuery('2015-05-01,2015-05-31', countryCode);
+  getFormaQuery('2015-06-01,2015-06-30', countryCode);
+};
+
+getQueriesAllCountry("mmr");
+getQueriesAllCountry("ind");
+getQueriesAllCountry("bgd");
+getQueriesAllCountry("tha");
 
 
 

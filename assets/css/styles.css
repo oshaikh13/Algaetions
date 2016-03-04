@@ -28,6 +28,16 @@
   background-color: white;
 }
 
+.photosynthesis {
+  display: block;
+  margin: 0 auto;
+  padding-bottom: 2%;
+}
+
+.lighter {
+  font-weight: lighter;
+}
+
 .main-header {
   font-size: 50px; }
 

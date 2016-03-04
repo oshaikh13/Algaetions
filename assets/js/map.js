@@ -1,7 +1,4 @@
-// $('.remodal').remodal({ hashTracking: false });
-
-
-var bubbles = [];
+var localStorageData = localStorage.getItem('data');
 
 var parser = function(data, points, custom) {
   data.forEach(function(coordinates) {
@@ -25,15 +22,119 @@ var parser = function(data, points, custom) {
   });
 };
 
-var csvParse = function(url, parser, custom, cb) {
+var csvParse = function(url, parser, custom, key, cb) {
   var points = [];
   d3.csv(url, function(err, data) {
 
     parser(data, points, custom);
-    cb(points);
+    cb(points, key);
   });
 
 };
+
+
+var data = {
+  algae : {},
+  deforestation: {
+    countries : {
+
+    }
+  }
+};
+
+
+var bubbles = [];
+var addBubbles;
+
+var loadedDeforestation = 0;
+var loadedCSV = 0;
+
+var storeLocal = function() {
+  localStorage.setItem('data', JSON.stringify(data));
+  console.log('STORED');
+};
+
+var fetchDeforestation = function(param, month, country) {
+  $.getJSON('/sst_parser/parsed-geojson/' + param + '.json', function(forestBubble){
+    if (!data.deforestation.countries[country]) {
+      data.deforestation.countries[country] = {};
+    }
+
+    data.deforestation.countries[country][month] = forestBubble;
+    loadedDeforestation++;
+
+    if (loadedCSV === 6 && loadedDeforestation === 24) {
+      storeLocal();
+    } 
+
+  });
+};
+
+
+var initDeforestationFetch = function(countryCode, countryName) {
+  fetchDeforestation(countryCode +'2015-01-01,2015-01-31', 1, countryName);
+  fetchDeforestation(countryCode +'2015-02-01,2015-02-28', 2, countryName);
+  fetchDeforestation(countryCode +'2015-03-01,2015-03-31', 3, countryName);
+  fetchDeforestation(countryCode +'2015-04-01,2015-04-30', 4, countryName);
+  fetchDeforestation(countryCode +'2015-05-01,2015-05-31', 5, countryName);
+  fetchDeforestation(countryCode +'2015-06-01,2015-06-30', 6, countryName);
+};
+
+
+var initFetch = function() {
+  initDeforestationFetch('mmr', 'myanmar');
+  initDeforestationFetch('ind', 'india');
+  initDeforestationFetch('bgd', 'bangladesh');
+  initDeforestationFetch('tha', 'thailand');
+
+
+
+  for (var i = 1; i <= 6; i++) {
+    csvParse('/assets/data/phytoplankton/bengalbay/20150' + i +'.csv',
+      parser, {
+        fillKey: 'chlorobubble',
+        borderWidth: 0,
+        popupOnHover: true
+      },
+
+      i,
+
+      function (blooms, key) { 
+        loadedCSV++;
+        if (loadedCSV === 6 && loadedDeforestation === 24) {
+          storeLocal();
+        } 
+        data.algae[key] = blooms;
+      }
+    );  
+  }
+};
+
+
+if (!localStorageData) {
+  console.log("NOT STORED. FETCHING");
+  initFetch();
+} else {
+  console.log("STORED. YAY");
+  data = localStorageData;
+}
+
+
+var checkMapForm = function() {
+  console.log('Updating map');
+  var algaeDate = $('input[name=2015-algae]:checked', '#mapform').val();
+  var deforestationDate = $('input[name=2015-forest]:checked', '#mapform').val();
+  var country = $('input[name=countries]:checked', '#mapform').val();
+  var cumulative = $('#cumulative').prop('checked');
+
+
+  console.log(algaeDate);
+  console.log(deforestationDate);
+  console.log(country);
+  console.log(cumulative);
+
+};
+
 
 $(document).ready(function(argument) {
 
@@ -76,13 +177,13 @@ $(document).ready(function(argument) {
 
       function redraw() {
         datamap.svg.selectAll("g")
-          .attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")")
+          .attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 
       }
     }
   });
 
-  var addBubbles = function (data) {
+  addBubbles = function (data) {
     bubbles = bubbles.concat(data);
     zoom.bubbles(bubbles, {
       popupTemplate: function(geo, bubble) {
@@ -104,29 +205,6 @@ $(document).ready(function(argument) {
     });
   };
 
-  var fetchDeforestation = function(param) {
-    $.getJSON('/sst_parser/parsed-geojson/' + param + '.json', function(data){
-      addBubbles(data);
-    });
-  };
-
-  csvParse('/assets/data/phytoplankton/bengalbay/201506.csv',
-    parser, {
-      fillKey: 'chlorobubble',
-      borderWidth: 0,
-      popupOnHover: true
-    },
-    function(data) {
-      addBubbles(data);
-      // fetchTemp('2015-01-04-sst');
-      fetchDeforestation('mmr2015-01-01,2015-05-29');
-      fetchDeforestation('ind2015-01-01,2015-05-29');
-      fetchDeforestation('bgd2015-01-01,2015-05-29');
-      fetchDeforestation('tha2015-01-01,2015-05-29');
-
-
-
-    });
 });
 
 
