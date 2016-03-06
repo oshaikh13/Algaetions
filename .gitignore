@@ -2,3 +2,4 @@ node_modules
 sst_parser/text
 sst_parser/data
 sst_parser/parsed-geojson
+backup.json

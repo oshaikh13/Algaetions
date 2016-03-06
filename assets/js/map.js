@@ -1,38 +1,5 @@
 var localStorageData = localStorage.getItem('data');
 
-var parser = function(data, points, custom) {
-  data.forEach(function(coordinates) {
-    var data = {};
-    for (var key in coordinates) {
-      if (key === "") { // latitude
-        data.latitude = coordinates[key];
-      } else if (coordinates[key] !== "NaN") { // longitude
-        data.longitude = key;
-        data.radius = coordinates[key];
-      }
-    }
-
-    if (data.latitude && data.radius && data.longitude) {
-      for (var key in custom) {
-        data[key] = custom[key];
-      }
-      points.push(data);
-    }
-
-  });
-};
-
-var csvParse = function(url, parser, custom, key, cb) {
-  var points = [];
-  d3.csv(url, function(err, data) {
-
-    parser(data, points, custom);
-    cb(points, key);
-  });
-
-};
-
-
 var data = {
   algae : {},
   deforestation: {
@@ -41,7 +8,6 @@ var data = {
     }
   }
 };
-
 
 var bubbles = [];
 var addBubbles;
@@ -54,84 +20,80 @@ var storeLocal = function() {
   console.log('STORED');
 };
 
-var fetchDeforestation = function(param, month, country) {
-  $.getJSON('/sst_parser/parsed-geojson/' + param + '.json', function(forestBubble){
-    if (!data.deforestation.countries[country]) {
-      data.deforestation.countries[country] = {};
+var loadBubbles = function(algaeDate, deforestationDate, cumulative, country) {
+  bubbles = [];
+  algaeDate = parseInt(algaeDate);
+  deforestationDate = parseInt(deforestationDate);
+
+  console.log(algaeDate, deforestationDate, cumulative, country);
+
+  if (country === "all") {
+    for (var key in data.deforestation.countries) {
+      var set = data.deforestation.countries[key];
+      if (cumulative) {
+        for (var i = deforestationDate; i >=1; i--) {
+          bubbles = bubbles.concat(set[i]);
+        }
+      } else {
+        bubbles = bubbles.concat(set[deforestationDate]);  
+      }
     }
+  } else {
+    var countryData = data.deforestation.countries[country];
 
-    data.deforestation.countries[country][month] = forestBubble;
-    loadedDeforestation++;
+    if (cumulative) {
+      for (var i = deforestationDate; i >=1; i--) {
+        bubbles = bubbles.concat(countryData[i]);
+      }
+    } else {
+      bubbles = bubbles.concat(countryData[deforestationDate]);  
+    }
+  }
 
-    if (loadedCSV === 6 && loadedDeforestation === 24) {
-      storeLocal();
-    } 
+  bubbles = bubbles.concat(data.algae[algaeDate]);
+  addBubbles(bubbles);
+};
 
+var renderInitBubbles = function() {
+  $('.loading').fadeOut();
+  console.log("RENDERING");
+  loadBubbles(5, 5, true, "myanmar");
+};
+
+var initFetch = function(cb) {
+  $.getJSON('backup.json', function(forestBubble){
+    data = forestBubble;
+    localStorage.setItem('data', JSON.stringify(data));
+    cb();
   });
 };
 
 
-var initDeforestationFetch = function(countryCode, countryName) {
-  fetchDeforestation(countryCode +'2015-01-01,2015-01-31', 1, countryName);
-  fetchDeforestation(countryCode +'2015-02-01,2015-02-28', 2, countryName);
-  fetchDeforestation(countryCode +'2015-03-01,2015-03-31', 3, countryName);
-  fetchDeforestation(countryCode +'2015-04-01,2015-04-30', 4, countryName);
-  fetchDeforestation(countryCode +'2015-05-01,2015-05-31', 5, countryName);
-  fetchDeforestation(countryCode +'2015-06-01,2015-06-30', 6, countryName);
-};
-
-
-var initFetch = function() {
-  initDeforestationFetch('mmr', 'myanmar');
-  initDeforestationFetch('ind', 'india');
-  initDeforestationFetch('bgd', 'bangladesh');
-  initDeforestationFetch('tha', 'thailand');
-
-
-
-  for (var i = 1; i <= 6; i++) {
-    csvParse('/assets/data/phytoplankton/bengalbay/20150' + i +'.csv',
-      parser, {
-        fillKey: 'chlorobubble',
-        borderWidth: 0,
-        popupOnHover: true
-      },
-
-      i,
-
-      function (blooms, key) { 
-        loadedCSV++;
-        if (loadedCSV === 6 && loadedDeforestation === 24) {
-          storeLocal();
-        } 
-        data.algae[key] = blooms;
-      }
-    );  
-  }
-};
-
-
 if (!localStorageData) {
-  console.log("NOT STORED. FETCHING");
-  initFetch();
+  console.log("FETCHING");
+  initFetch(function(){
+    renderInitBubbles();
+  });
 } else {
   console.log("STORED. YAY");
-  data = localStorageData;
+
+  $(document).on('ready', function(){
+    renderInitBubbles();
+  });
+
+  data = JSON.parse(localStorageData);
 }
 
 
+
 var checkMapForm = function() {
-  console.log('Updating map');
+
   var algaeDate = $('input[name=2015-algae]:checked', '#mapform').val();
   var deforestationDate = $('input[name=2015-forest]:checked', '#mapform').val();
   var country = $('input[name=countries]:checked', '#mapform').val();
   var cumulative = $('#cumulative').prop('checked');
 
-
-  console.log(algaeDate);
-  console.log(deforestationDate);
-  console.log(country);
-  console.log(cumulative);
+  loadBubbles(algaeDate, deforestationDate, cumulative, country);
 
 };
 
@@ -199,15 +161,6 @@ $(document).ready(function(argument) {
     });
   };
 
-  var fetchTemp = function (param) {
-    $.getJSON('/sst_parser/data/' + param + '.json', function(data){
-      addBubbles(data);
-    });
-  };
-
 });
-
-
-
 
 
