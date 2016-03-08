@@ -6,12 +6,24 @@
   background: -ms-linear-gradient(#0b8793, #360033);
   background: linear-gradient(#0b8793, #360033); }
 
+.progress {
+  display: block;
+  text-align: center;
+  width: 0;
+  height: 3px;
+  background: red;
+  transition: width .3s;
+}
+.progress.hide {
+  opacity: 0;
+  transition: opacity 1.3s;
+}
 
 .center {
   text-align: center; }
 
 .center-button {
-    text-align: center;
+  text-align: center;
 }
 
 .button-holder {
@@ -45,7 +57,10 @@
 }
 
 .main-header {
-  font-size: 50px; }
+  font-size: 50px; 
+  font-family: 'Oswald', sans-serif;
+  font-weight: 400;
+}
 
 .sub-header {
   font-size: 30px;

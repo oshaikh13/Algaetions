@@ -1,5 +1,6 @@
 var localStorageData = localStorage.getItem('data');
 
+// Data "schema"
 var data = {
   algae : {},
   deforestation: {
@@ -19,6 +20,8 @@ var storeLocal = function() {
   localStorage.setItem('data', JSON.stringify(data));
   console.log('STORED');
 };
+
+
 
 var loadBubbles = function(algaeDate, deforestationDate, cumulative, country) {
   bubbles = [];
@@ -61,10 +64,39 @@ var renderInitBubbles = function() {
 };
 
 var initFetch = function(cb) {
-  $.getJSON('backup.json', function(forestBubble){
-    data = forestBubble;
-    localStorage.setItem('data', JSON.stringify(data));
-    cb();
+
+  $.ajax({
+    xhr: function () {
+        var xhr = new window.XMLHttpRequest();
+        xhr.upload.addEventListener("progress", function (evt) {
+            if (evt.lengthComputable) {
+                var percentComplete = evt.loaded / evt.total;
+                console.log(percentComplete);
+                $('.progress').css({
+                  width: percentComplete * 100 + '%'
+                });
+                if (percentComplete === 1) {
+                  $('.progress').addClass('hide');
+                }
+            }
+        }, false);
+        xhr.addEventListener("progress", function (evt) {
+            if (evt.lengthComputable) {
+                var percentComplete = evt.loaded / evt.total;
+                console.log(percentComplete);
+                $('.progress').css({
+                  width: percentComplete * 100 + '%'
+                });
+            }
+        }, false);
+        return xhr;
+    },
+    url: "backup.json",
+    success: function (forestBubble) {
+      data = forestBubble;
+      localStorage.setItem('data', JSON.stringify(data));
+      cb(); 
+    }
   });
 };
 
@@ -76,7 +108,9 @@ if (!localStorageData) {
   });
 } else {
   console.log("STORED. YAY");
-
+  $('.progress').css({
+    width: 1 * 100 + '%'
+  });
   $(document).on('ready', function(){
     renderInitBubbles();
   });
@@ -92,6 +126,11 @@ var checkMapForm = function() {
   var deforestationDate = $('input[name=2015-forest]:checked', '#mapform').val();
   var country = $('input[name=countries]:checked', '#mapform').val();
   var cumulative = $('#cumulative').prop('checked');
+
+  if (!algaeDate || !deforestationDate || !country) {
+    alert("Select at least one Algae Date, Deforestation Date, or country");
+    return;
+  }
 
   loadBubbles(algaeDate, deforestationDate, cumulative, country);
 
