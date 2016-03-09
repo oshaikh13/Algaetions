@@ -1,7 +1,19 @@
 var request = require('request');
 var fs = require('fs');
 
-var parseGeoJSON = function(geojson, name) {
+var allData = {
+  algae: {},
+  deforestation: {
+    countries: {
+
+    }
+  }
+};
+
+var numForma = 0;
+var numCSV = 0;
+
+var parseGeoJSON = function(geojson, name, fullName, key) {
   console.log(geojson.features.length);
   var arrParse = [];
   for (var i = 0; i < geojson.features.length; i++) {
@@ -15,6 +27,9 @@ var parseGeoJSON = function(geojson, name) {
     });
   }
 
+  allData.deforestation.countries[fullName] = {};
+  allData.deforestation.countries[fullName][key] = arrParse;
+
   fs.writeFile(__dirname + '/parsed-geojson/' + name + ".json", JSON.stringify(arrParse, null, 2), function(err) {
       if (err) {
         console.log(err);
@@ -24,17 +39,17 @@ var parseGeoJSON = function(geojson, name) {
   }); 
 };
 
-var getFormaData = function(url, name) {
+var getFormaData = function(url, name, fullName, key) {
    var options = { method: 'GET',
     url: url};
 
   request(options, function (error, response, body) {
     if (error) throw new Error(error);
-    parseGeoJSON(JSON.parse(body), name);
+    parseGeoJSON(JSON.parse(body), name, fullName, key);
   }); 
 };
 
-var getFormaQuery = function(date, location) {
+var getFormaQuery = function(date, location, fullName, key) {
   // 2015-01-01,2015-01-29 sample date
 
   var options = { method: 'POST',
@@ -44,24 +59,24 @@ var getFormaQuery = function(date, location) {
   request(options, function (error, response, body) {
     if (error) throw new Error(error);
     body = JSON.parse(body);
-    getFormaData(body.download_urls.geojson, location + date);
+    getFormaData(body.download_urls.geojson, location + date, fullName, key);
   });
 };
 
 
-var getQueriesAllCountry = function(countryCode) {
-  getFormaQuery('2015-01-01,2015-01-31', countryCode);
-  getFormaQuery('2015-02-01,2015-02-28', countryCode);
-  getFormaQuery('2015-03-01,2015-03-31', countryCode);
-  getFormaQuery('2015-04-01,2015-04-30', countryCode);
-  getFormaQuery('2015-05-01,2015-05-31', countryCode);
-  getFormaQuery('2015-06-01,2015-06-30', countryCode);
+var getQueriesAllCountry = function(countryCode, fullName) {
+  getFormaQuery('2015-01-01,2015-01-31', countryCode, fullName, 1);
+  getFormaQuery('2015-02-01,2015-02-28', countryCode, fullName, 2);
+  getFormaQuery('2015-03-01,2015-03-31', countryCode, fullName, 3);
+  getFormaQuery('2015-04-01,2015-04-30', countryCode, fullName, 4);
+  getFormaQuery('2015-05-01,2015-05-31', countryCode, fullName, 5);
+  getFormaQuery('2015-06-01,2015-06-30', countryCode, fullName, 6);
 };
 
-getQueriesAllCountry("mmr");
-getQueriesAllCountry("ind");
-getQueriesAllCountry("bgd");
-getQueriesAllCountry("tha");
+getQueriesAllCountry("mmr", "myanmar");
+getQueriesAllCountry("ind", "india");
+getQueriesAllCountry("bgd", "bangladesh");
+getQueriesAllCountry("tha", "thailand");
 
 
 
