@@ -14,7 +14,6 @@ var numForma = 0;
 var numCSV = 0;
 
 var parseGeoJSON = function(geojson, name, fullName, key) {
-  console.log(geojson.features.length);
   var arrParse = [];
   for (var i = 0; i < geojson.features.length; i++) {
     arrParse.push({
@@ -30,11 +29,16 @@ var parseGeoJSON = function(geojson, name, fullName, key) {
   allData.deforestation.countries[fullName] = {};
   allData.deforestation.countries[fullName][key] = arrParse;
 
+  numForma++;
+  
+  if (numForma === 24) {
+    console.log("COMPLETED FETCHING");
+  }
+
   fs.writeFile(__dirname + '/parsed-geojson/' + name + ".json", JSON.stringify(arrParse, null, 2), function(err) {
       if (err) {
         console.log(err);
       } else {
-        console.log("DONE");
       }
   }); 
 };

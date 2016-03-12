@@ -9,6 +9,7 @@
   "author": "Omar Shaikh <oshaikh13@gmail.com> (http://www.awesomeomar.com)",
   "license": "ISC",
   "dependencies": {
+    "foundation-apps": "^1.2.0",
     "remodal": "^1.0.6",
     "request": "^2.69.0"
   }

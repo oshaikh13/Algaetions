@@ -11,13 +11,6 @@
     <link href='https://fonts.googleapis.com/css?family=Oswald:400' rel='stylesheet' type='text/css'>
   </head>
 
-  <style>
-    .menu-bar {margin-bottom: 0;}
-    #sub-nav, .messages {border-right: 1px solid #eee;}
-    .medium-grid-content {padding:1rem !important;}
-    .main-content {background: #fff;}
-  </style>
-
   <body>
     <div class="progress"></div>
     <div class="loading">
@@ -40,7 +33,9 @@
 
       <div class="grid-block">
         <div class="grid-block show-for-medium medium-6">
-          <div id="map-view" width="100%" height="100%"></div>
+          <div id="map-view" width="100%" height="100%">
+            
+          </div>
         </div>
         <div ng-class="['ui-animation']" ui-view class="grid-block small-12 medium-6 wrap main-content">
           
@@ -57,6 +52,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.appear/0.3.3/jquery.appear.min.js"></script>
 
     <!-- External recources (NPM) -->
     <script type="text/javascript" src="node_modules/datamaps/dist/datamaps.all.js"></script>

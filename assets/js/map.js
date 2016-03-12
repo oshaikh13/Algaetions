@@ -10,6 +10,8 @@ var data = {
   }
 };
 
+var autoSwitch = true;
+
 var bubbles = [];
 var addBubbles;
 
@@ -20,6 +22,7 @@ var storeLocal = function() {
   localStorage.setItem('data', JSON.stringify(data));
   console.log('STORED');
 };
+
 
 
 
@@ -111,6 +114,7 @@ if (!localStorageData) {
   $('.progress').css({
     width: 1 * 100 + '%'
   });
+
   $(document).on('ready', function(){
     renderInitBubbles();
   });
@@ -136,8 +140,9 @@ var checkMapForm = function() {
 
 };
 
-
 $(document).ready(function(argument) {
+
+
 
   var mapElem = document.getElementById('map-view');
 
@@ -176,11 +181,16 @@ $(document).ready(function(argument) {
     done: function(datamap) {
       datamap.svg.call(d3.behavior.zoom().on("zoom", redraw));
 
+      datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
+        console.log(geography.id);
+      });
+
       function redraw() {
         datamap.svg.selectAll("g")
           .attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 
       }
+
     }
   });
 

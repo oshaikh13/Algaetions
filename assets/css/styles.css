@@ -42,14 +42,20 @@
   color: white;
 }
 
+.slight-margin {
+  margin-left: 2% !important;
+}
+
 .picker {
   background-color: white;
 }
 
-.photosynthesis {
-  display: block;
-  margin: 0 auto;
-  padding-bottom: 2%;
+.final-row {
+  padding-bottom: 0px !important;
+}
+
+.final-bar {
+  margin-top: 0px;
 }
 
 .lighter {
@@ -82,7 +88,10 @@
   padding: 0px;
 }
 
-
+.menu-bar {margin-bottom: 0;}
+#sub-nav, .messages {border-right: 1px solid #eee;}
+.medium-grid-content {padding:1rem !important;}
+.main-content {background: #fff;}
 
 /* Absolute Center Spinner */
 .loading {
@@ -118,6 +127,11 @@
   text-shadow: none;
   background-color: transparent;
   border: 0;
+}
+
+.information-country {
+  font-size: 30px;
+  line-height: 93%;
 }
 
 .loading:not(:required):after {
