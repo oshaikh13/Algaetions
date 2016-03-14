@@ -78,9 +78,7 @@ var initFetch = function(cb) {
                 $('.progress').css({
                   width: percentComplete * 100 + '%'
                 });
-                if (percentComplete === 1) {
-                  $('.progress').addClass('hide');
-                }
+
             }
         }, false);
         xhr.addEventListener("progress", function (evt) {
@@ -97,6 +95,7 @@ var initFetch = function(cb) {
     url: "backup.json",
     success: function (forestBubble) {
       data = forestBubble;
+      $('.progress').remove();
       localStorage.setItem('data', JSON.stringify(data));
       cb(); 
     }
@@ -111,9 +110,7 @@ if (!localStorageData) {
   });
 } else {
   console.log("STORED. YAY");
-  $('.progress').css({
-    width: 1 * 100 + '%'
-  });
+  $('.progress').remove();
 
   $(document).on('ready', function(){
     renderInitBubbles();
