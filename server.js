@@ -3,7 +3,7 @@ var path = require('path');
 var allData = require('./ALLDATA.json');
 var app = express();
 
-app.use(express.static(path.resolve(__dirname + '/../client')));
+app.use(express.static(path.resolve(__dirname + '/./client')));
 
 var PORT = process.env.PORT || 8000;
 
