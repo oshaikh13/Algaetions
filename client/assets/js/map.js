@@ -1,6 +1,18 @@
+// TODO: Use an MVC Framework 
+// idk react seems kewl. 
+// Model would be this localstorage.
+// View would be controlled with datamaps. 
+
+
+// For anyone peeking. Localstorage is the coolest thing ever.
+// You can store strings on the client. STORE THEM :p
+// No need to make heavy ajax calls.
 var localStorageData = localStorage.getItem('data');
 
 // Data "schema"
+// Algae data was given. I wrote a parser for that data. look at the github repo.
+// Forest data, however, was from FORMA. 
+// Thanks Global Forest Watch for that wicked API <3. And James Lane Conkling u idiot.
 var data = {
   algae : {},
   deforestation: {
@@ -10,21 +22,16 @@ var data = {
   }
 };
 
+// Does nothing rn
 var autoSwitch = true;
 
 var bubbles = [];
 var addBubbles;
 
-var loadedDeforestation = 0;
-var loadedCSV = 0;
-
 var storeLocal = function() {
   localStorage.setItem('data', JSON.stringify(data));
   console.log('STORED');
 };
-
-
-
 
 var loadBubbles = function(algaeDate, deforestationDate, cumulative, country) {
   bubbles = [];
@@ -58,15 +65,14 @@ var loadBubbles = function(algaeDate, deforestationDate, cumulative, country) {
 
   bubbles = bubbles.concat(data.algae[algaeDate]);
 
-  if (!addBubbles) {
-    console.log('FATAL ERROR');
-  }
-
   addBubbles(bubbles);
 };
 
 var renderInitBubbles = function() {
-  $('.loading').fadeOut();
+  // For some reason, fadeout wouldn't work lol
+  // idk probs the overlay blocking us from modifying the elements. (makes sense?)
+  // just used remove instead. same effect. 
+  $('.loading').remove();
   console.log("RENDERING");
   loadBubbles(5, 5, true, "myanmar");
 };
@@ -129,8 +135,6 @@ var checkMapForm = function() {
 
 $(document).ready(function(argument) {
 
-
-
   var mapElem = document.getElementById('map-view');
 
   // debugger;
@@ -177,18 +181,14 @@ $(document).ready(function(argument) {
           .attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 
       }
-
     }
   });
 
-  addBubbles = function (data) {
-    bubbles = bubbles.concat(data);
-    zoom.bubbles(bubbles, {
+
+  addBubbles = function (bubbleParam) {
+    zoom.bubbles(bubbleParam, {
       popupTemplate: function(geo, bubble) {
-        if (!bubble.temp) {
-          bubble.temp = bubble.radius;
-        }
-        return ['<div class="hoverinfo">' + bubble.temp,
+        return ['<div class="hoverinfo">' + bubble.radius,
           '<br/>Longitude: ' + bubble.longitude + '',
           '<br/>Latitude: ' + bubble.latitude + '',
           '</div>'
@@ -196,6 +196,8 @@ $(document).ready(function(argument) {
       }
     });
   };
+
+
 
   if (!localStorageData) {
     console.log("FETCHING");
@@ -208,7 +210,6 @@ $(document).ready(function(argument) {
     data = JSON.parse(localStorageData);
     renderInitBubbles();
   }
-
 
 });
 
