@@ -92,7 +92,7 @@ var initFetch = function(cb) {
         }, false);
         return xhr;
     },
-    url: "backup.json",
+    url: "/data",
     success: function (forestBubble) {
       data = forestBubble;
       $('.progress').remove();
