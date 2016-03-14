@@ -57,6 +57,11 @@ var loadBubbles = function(algaeDate, deforestationDate, cumulative, country) {
   }
 
   bubbles = bubbles.concat(data.algae[algaeDate]);
+
+  if (!addBubbles) {
+    console.log('FATAL ERROR');
+  }
+
   addBubbles(bubbles);
 };
 
@@ -103,21 +108,6 @@ var initFetch = function(cb) {
 };
 
 
-if (!localStorageData) {
-  console.log("FETCHING");
-  initFetch(function(){
-    renderInitBubbles();
-  });
-} else {
-  console.log("STORED. YAY");
-  $('.progress').remove();
-
-  $(document).on('ready', function(){
-    renderInitBubbles();
-  });
-
-  data = JSON.parse(localStorageData);
-}
 
 
 
@@ -206,6 +196,23 @@ $(document).ready(function(argument) {
       }
     });
   };
+
+  if (!localStorageData) {
+    console.log("FETCHING");
+    initFetch(function(){
+      renderInitBubbles();
+    });
+  } else {
+    console.log("STORED. YAY");
+    $('.progress').remove();
+
+    $(document).on('ready', function(){
+      renderInitBubbles();
+    });
+
+    data = JSON.parse(localStorageData);
+  }
+
 
 });
 
