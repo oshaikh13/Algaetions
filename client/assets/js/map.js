@@ -205,12 +205,8 @@ $(document).ready(function(argument) {
   } else {
     console.log("STORED. YAY");
     $('.progress').remove();
-
-    $(document).on('ready', function(){
-      renderInitBubbles();
-    });
-
     data = JSON.parse(localStorageData);
+    renderInitBubbles();
   }
 
 
