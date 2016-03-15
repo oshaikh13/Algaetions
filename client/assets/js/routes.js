@@ -14,5 +14,13 @@ var foundationRoutes =
     "animationIn":"hingeInFromMiddleY bounceInOut",
     "animationOut":"zoomOut bounceInOut",
     "path":"templates/settings.html"
+  },
+
+  {
+    "name":"about",
+    "url":"/about",
+    "animationIn":"hingeInFromMiddleY bounceInOut",
+    "animationOut":"zoomOut bounceInOut",
+    "path":"templates/about.html"
   }
 ]; 
