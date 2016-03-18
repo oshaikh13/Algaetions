@@ -95,7 +95,7 @@
 .menu-bar {margin-bottom: 0;}
 #sub-nav, .messages {border-right: 1px solid #eee;}
 .medium-grid-content {padding:1rem !important;}
-.main-content {background: #fff;}
+.main-content {background: #360033;}
 
 /* Absolute Center Spinner */
 .loading {
@@ -120,7 +120,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.3);
+  background-color: rgba(0,0,0,0.4);
 }
 
 /* :not(:required) hides these rules from IE9 and below */
