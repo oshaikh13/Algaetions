@@ -134,7 +134,7 @@ $(document).ready(function(argument) {
   var mapElem = document.getElementById('map-view');
 
   // debugger;
-  var setHeight = $(document).height() * 0.9; //if not null, datamaps will grab the height of 'element'
+  var setHeight = $(document).height() * 0.95; //if not null, datamaps will grab the height of 'element'
 
 
   var zoom = new Datamap({
