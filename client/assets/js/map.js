@@ -30,15 +30,12 @@ var addBubbles;
 
 var storeLocal = function() {
   localStorage.setItem('data', JSON.stringify(data));
-  console.log('STORED');
 };
 
 var loadBubbles = function(algaeDate, deforestationDate, cumulative, country) {
   bubbles = [];
   algaeDate = parseInt(algaeDate);
   deforestationDate = parseInt(deforestationDate);
-
-  console.log(algaeDate, deforestationDate, cumulative, country);
 
   if (country === "all") {
     for (var key in data.deforestation.countries) {
@@ -73,7 +70,6 @@ var renderInitBubbles = function() {
   // idk probs the overlay blocking us from modifying the elements. (makes sense?)
   // just used remove instead. same effect. 
   $('.loading').remove();
-  console.log("RENDERING");
   loadBubbles(5, 5, true, "myanmar");
 };
 
@@ -85,7 +81,7 @@ var initFetch = function(cb) {
         xhr.upload.addEventListener("progress", function (evt) {
             if (evt.lengthComputable) {
                 var percentComplete = evt.loaded / evt.total;
-                console.log(percentComplete);
+
                 $('.progress').css({
                   width: percentComplete * 100 + '%'
                 });
@@ -95,7 +91,7 @@ var initFetch = function(cb) {
         xhr.addEventListener("progress", function (evt) {
             if (evt.lengthComputable) {
                 var percentComplete = evt.loaded / evt.total;
-                console.log(percentComplete);
+
                 $('.progress').css({
                   width: percentComplete * 100 + '%'
                 });
@@ -200,17 +196,14 @@ $(document).ready(function(argument) {
 
 
   if (!localStorageData) {
-    console.log("FETCHING");
     initFetch(function(){
       renderInitBubbles();
     });
   } else {
-    console.log("STORED. YAY");
     $('.progress').remove();
     data = JSON.parse(localStorageData);
     renderInitBubbles();
   }
 
 });
-
 

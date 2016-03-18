@@ -2,6 +2,8 @@
 <html lang="en" ng-app="application">
   <head>
     <meta charset="utf-8" />
+    <!-- Edge doesn't work with highlighting on datamaps. Emulate IE10 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Algaetions</title>
     <link href="assets/css/app.css" rel="stylesheet" type="text/css">
@@ -46,9 +48,12 @@
     </div>
 
     <!-- Foundation Setup -->
-    <script src="assets/lib/foundation/app.js"></script>
+    <script src="assets/lib/foundation/fastclick.js"></script>
     <script src="assets/js/routes.js"></script>
     <script src="assets/lib/foundation/angular.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script src="assets/lib/foundation/foundationModules.js"></script>
+
 
     <!-- External recources (CDN) -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
