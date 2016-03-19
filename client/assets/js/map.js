@@ -32,6 +32,15 @@ var storeLocal = function() {
   localStorage.setItem('data', JSON.stringify(data));
 };
 
+// Work on only editing settings. These are the defaults. The form reads and edits.
+// Maybe store this in localStorage?
+var selectedOptions = {
+  country: "myanmar",
+  algaeDate: 5,
+  deforestationDate: 5,
+  cumulative: true
+};
+
 var loadBubbles = function(algaeDate, deforestationDate, cumulative, country) {
   bubbles = [];
   algaeDate = parseInt(algaeDate);
@@ -129,6 +138,18 @@ var checkMapForm = function() {
 
 };
 
+var handleCountryClick = function(area) {
+  if (area === "IND") {
+    loadBubbles(5, 5, true, "india");
+  } else if (area === "MMR") {
+    loadBubbles(5, 5, true, "myanmar");
+  } else if (area === "THA") {
+    loadBubbles(5, 5, true, "thailand");
+  } else if (area === "BGD") {
+    loadBubbles(5, 5, true, "bangladesh");
+  }
+};
+
 $(document).ready(function(argument) {
 
   var mapElem = document.getElementById('map-view');
@@ -141,6 +162,9 @@ $(document).ready(function(argument) {
     element: mapElem,
     scope: 'world',
     height: setHeight,
+    geographyConfig: {
+      highlightOnHover: false
+    },
     // Zoom in on Bengal Bay
     setProjection: function(element) {
       var projection = d3.geo.equirectangular()
@@ -169,7 +193,7 @@ $(document).ready(function(argument) {
       datamap.svg.call(d3.behavior.zoom().on("zoom", redraw));
 
       datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
-        console.log(geography.id);
+        handleCountryClick(geography.id);
       });
 
       function redraw() {
