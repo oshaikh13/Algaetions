@@ -1,3 +1,5 @@
+// Foundation routes (used by angulars ui-sref)
+
 var foundationRoutes = 
 [
   {

@@ -1,3 +1,5 @@
+// map.js
+
 // TODO: Use an MVC Framework 
 // idk react seems kewl. 
 // Model would be this localstorage.
@@ -34,6 +36,7 @@ var storeLocal = function() {
 
 // Work on only editing settings. These are the defaults. The form reads and edits.
 // Maybe store this in localStorage?
+// TODO: Finish this. Currently incomplete.
 var selectedOptions = {
   country: "myanmar",
   algaeDate: 5,

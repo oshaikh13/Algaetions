@@ -23,6 +23,14 @@
   transition: opacity 1.3s;
 }
 
+a {
+  color: red;
+}
+
+a:hover {
+  color: #8B0000;
+}
+
 .center {
   text-align: center; }
 

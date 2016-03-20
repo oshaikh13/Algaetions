@@ -1,3 +1,5 @@
+// Scaffolding for foundation app
+
 var app = angular.module("application", 
   ["ui.router", 
    "ngAnimate", 
