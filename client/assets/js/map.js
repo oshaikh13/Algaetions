@@ -82,7 +82,7 @@ var renderInitBubbles = function() {
   // idk probs the overlay blocking us from modifying the elements. (makes sense?)
   // just used remove instead. same effect. 
   $('.loading').remove();
-  loadBubbles(5, 5, true, "myanmar");
+  loadBubbles(6, 6, true, "myanmar");
 };
 
 var initFetch = function(cb) {
@@ -143,13 +143,13 @@ var checkMapForm = function() {
 
 var handleCountryClick = function(area) {
   if (area === "IND") {
-    loadBubbles(5, 5, true, "india");
+    loadBubbles(6, 6, true, "india");
   } else if (area === "MMR") {
-    loadBubbles(5, 5, true, "myanmar");
+    loadBubbles(6, 6, true, "myanmar");
   } else if (area === "THA") {
-    loadBubbles(5, 5, true, "thailand");
+    loadBubbles(6, 6, true, "thailand");
   } else if (area === "BGD") {
-    loadBubbles(5, 5, true, "bangladesh");
+    loadBubbles(6, 6, true, "bangladesh");
   }
 };
 
@@ -200,6 +200,7 @@ $(document).ready(function(argument) {
       });
 
       function redraw() {
+        // TODO: Implement screen lock
         datamap.svg.selectAll("g")
           .attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 
