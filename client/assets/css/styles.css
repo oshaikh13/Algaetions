@@ -79,7 +79,8 @@ a:hover {
 .sub-header {
   font-size: 30px;
   padding-bottom: 5%;
-  font-weight: 300 !important;
+  font-weight: 200 !important;
+  font-family: 'Open Sans', sans-serif;
 }
 
 .bullet-header {
@@ -141,6 +142,7 @@ a:hover {
 .information-country {
   font-size: 30px;
   line-height: 93%;
+  font-weight: 200;
 }
 
 .loading:not(:required):after {
