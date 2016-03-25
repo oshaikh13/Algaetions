@@ -82,7 +82,7 @@ var renderInitBubbles = function() {
   // idk probs the overlay blocking us from modifying the elements. (makes sense?)
   // just used remove instead. same effect. 
   $('.loading').remove();
-  loadBubbles(6, 6, true, "myanmar");
+  loadBubbles(3, 3, true, "myanmar");
 };
 
 var initFetch = function(cb) {
@@ -143,13 +143,13 @@ var checkMapForm = function() {
 
 var handleCountryClick = function(area) {
   if (area === "IND") {
-    loadBubbles(6, 6, true, "india");
+    loadBubbles(3, 3, true, "india");
   } else if (area === "MMR") {
-    loadBubbles(6, 6, true, "myanmar");
+    loadBubbles(3, 3, true, "myanmar");
   } else if (area === "THA") {
-    loadBubbles(6, 6, true, "thailand");
+    loadBubbles(3, 3, true, "thailand");
   } else if (area === "BGD") {
-    loadBubbles(6, 6, true, "bangladesh");
+    loadBubbles(3, 3, true, "bangladesh");
   }
 };
 
