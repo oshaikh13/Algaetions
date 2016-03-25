@@ -1,3 +1,7 @@
+// This was supposed to be a ridiculous SST Parser.
+// It worked in an awful fashion. I found a better correlation with deforestation.
+// It provides no use at all. Seriously. :p
+
 var fs = require('fs');
 var readline = require('readline');
 

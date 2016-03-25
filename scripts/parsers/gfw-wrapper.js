@@ -1,3 +1,10 @@
+// Fetches forma data for each country, using the 
+// GFW API. DOES NOT PARSE CSV. I wrote this script
+// in the browser, in an earlier commit...
+
+// TODO: Parse CSV. This has been done in ALLDATA.json, as it was saved throught the browser.
+// Make this a robust ALLDATA generator...
+
 var request = require('request');
 var fs = require('fs');
 
