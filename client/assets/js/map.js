@@ -161,7 +161,7 @@ $(document).ready(function(argument) {
   var setHeight = $(document).height() * 0.95; //if not null, datamaps will grab the height of 'element'
 
 
-  var zoom = new Datamap({
+  var algaeMap = new Datamap({
     element: mapElem,
     scope: 'world',
     height: setHeight,
@@ -193,24 +193,28 @@ $(document).ready(function(argument) {
     },
 
     done: function(datamap) {
-      datamap.svg.call(d3.behavior.zoom().on("zoom", redraw));
+      // create the zoom behvavior
+      var zoom = d3.behavior.zoom()
+        // only scale up, e.g. between 1x and 10x
+        .scaleExtent([1, 10]) // Some d3 witchcraft.
+        .on("zoom", redraw);
+
+      datamap.svg.call(zoom);
 
       datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
         handleCountryClick(geography.id);
       });
 
       function redraw() {
-        // TODO: Implement screen lock
         datamap.svg.selectAll("g")
           .attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-
       }
     }
   });
 
 
   addBubbles = function (bubbleParam) {
-    zoom.bubbles(bubbleParam, {
+    algaeMap.bubbles(bubbleParam, {
       popupTemplate: function(geo, bubble) {
         return ['<div class="hoverinfo">' + bubble.radius,
           '<br/>Longitude: ' + bubble.longitude + '',
