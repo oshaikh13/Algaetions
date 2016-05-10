@@ -3,6 +3,8 @@ My submission for NASAs Imagine Cup Earth project.
 	
 Algaetions is a dynamic web app that highlights the relationship between mass deforestation and algae blooms in the Bay of Bengal.
 
+This project is deployed on [Azure](http://www.algaetions.oshaikh.com)
+
 ## Getting Started
 ```
 npm install
